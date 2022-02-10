@@ -1,5 +1,9 @@
 ### ton-share-smc
 
+![FunC](https://img.shields.io/badge/made%20with-FunC-brightgreen)
+![Fift](https://img.shields.io/badge/made%20with-Fift-brightgreen)
+![TON](https://img.shields.io/badge/based%20on-The%20Open%20Network-blue)
+
 Allows incoming transactions to be divided into two parts. Can be useful, for example, 
 when you want to share profits with your partner. During initialization the share
 in percent of each of the two partners is set.
