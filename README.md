@@ -1,8 +1,8 @@
 ### ton-share-smc
 
-![FunC](https://img.shields.io/badge/made%20with-FunC-brightgreen)
-![Fift](https://img.shields.io/badge/made%20with-Fift-brightgreen)
-![TON](https://img.shields.io/badge/based%20on-The%20Open%20Network-blue)
+[![FunC](https://img.shields.io/badge/made%20with-FunC-brightgreen)](https://ton.org/docs/#/func)
+[![Fift](https://img.shields.io/badge/made%20with-Fift-brightgreen)](https://newton-blockchain.github.io/docs/fiftbase.pdf)
+[![TON](https://img.shields.io/badge/based%20on-The%20Open%20Network-blue)](https://ton.org/)
 
 Allows incoming transactions to be divided into two parts. Can be useful, for example, 
 when you want to share profits with your partner. During initialization the share
