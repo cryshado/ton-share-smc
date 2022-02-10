@@ -1,8 +1,4 @@
 ;;
-;; Simple Share TON Smart contract
-;;
-
-;;
 ;;  ton-share-smc – TON based smart contract for share allocation
 ;;
 ;;  Copyright (C) 2022 Alexander Gapak
