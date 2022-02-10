@@ -1,0 +1,60 @@
+#!/usr/bin/fift -s
+"TonUtil.fif" include
+"Asm.fif" include
+
+{ ."usage: " @' $0 type ." <workchain-id> <a-share> <a-addr> <b-share> <b-addr>" cr
+  ."Creates a new share-smc in the specified workchain" cr 1 halt
+} : usage
+
+$# 5 <> ' usage if
+
+$1 =: workchain
+$2 =: a-share
+$3 parse-smc-addr drop 2=: a-addr
+$4: b-share
+$5 parse-smc-addr drop 2=: b-addr
+
+<{ SETCP0 ACCEPT
+    "auto/simple-share-code.fif" include PUSHREF SETCODE
+}>c // code
+
+<b  // init_storage
+    a-share 7 u, a-addr Addr,
+    b-share 7 u, b-addr Addr,
+b>
+
+null // lib
+
+// ---- in stack now: (code, init_storage, lib) cells ----
+
+<b  // init message 
+    b{0011} s,  // split_depth:0 special:0 code:1 data:1
+    3 roll ref, // code cell reference
+    rot ref,    // data cell reference
+    swap dict,  // library
+b>
+
+dup hashu workchain swap 2dup 2constant smc_addr
+
+."new simple-share smc address:             " 2dup .addr cr
+."non-bounceable address (for init):        " 2dup 7 .Addr cr
+."bounceable address (for later access):    " 6 .Addr cr cr
+
+<b
+    b{1000100} s,   // write constructor
+    smc_addr addr,
+    b{000010} s,
+    swap <s s,      // StateInit
+    b{0} s,
+b>
+
+2 boc+>B
+
+// print boc
+// ."BOC: " dup Bx. cr
+
+"auto/init.boc" tuck B>file
+
+."Saved smc creating query to file: " type cr
+
+
