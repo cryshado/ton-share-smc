@@ -1,6 +1,6 @@
 ### ton-share-smc
 
-Allows incoming transactions to be divided into two parts. Can be useful, for example, when you want to share profits with your partner.
+Allows incoming transactions to be divided into two parts. Can be useful, for example, when you want to share profits with your partner. During initialization the share in percent of each of the two partners is set.
 
 #### Build
 
