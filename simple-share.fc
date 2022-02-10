@@ -34,6 +34,10 @@ _ unpack_storage() inline_ref {
 }
 
 () send_tons(slice addr, int amount, int mode, slice body) impure inline_ref {
+    ;; int_msg_info$0 ihr_disabled:Bool bounce:Bool bounced:Bool src:MsgAddress
+    ;; 0              1                 0           0            00
+    ;; 010000 -> hex -> 0x10
+
     builder msg = begin_cell()
                     .store_uint(0x10, 6)
                     .store_slice(addr)
