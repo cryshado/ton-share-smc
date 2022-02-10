@@ -38,7 +38,7 @@ _ unpack_storage() inline_ref {
 
     (int a_share, slice a_addr, int b_share, slice b_addr) = unpack_storage();
     
-    if (my_balance < (1 << 29)) { 
+    if ((my_balance - msg_value) < (1 << 29)) { 
         msg_value -= (1 << 29); 
     }
     
