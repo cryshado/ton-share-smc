@@ -14,6 +14,9 @@ $3 parse-smc-addr drop 2=: a-addr
 $4 parse-int =: b-share
 $5 parse-smc-addr drop 2=: b-addr
 
+a-share b-share + 100 = not 
+abort"The sum(share values) must be 100 (i.e. 100%)"
+
 <{ SETCP0 ACCEPT
     "auto/simple-share-code.fif" include PUSHREF SETCODE
 }>c =: code
@@ -32,9 +35,9 @@ b>  =: state-init
 
 state-init hashu workchain swap 2=: smc_addr
 
-."new simple-share smc address:             " smc_addr    .addr cr
-."non-bounceable address (for init):        " smc_addr  7 .Addr cr
-."bounceable address (for later access):    " smc_addr  6 .Addr cr cr
+."new simple-share smc address:           " smc_addr    .addr cr
+."non-bounceable address (for init):      " smc_addr  7 .Addr cr
+."bounceable address (for later access):  " smc_addr  6 .Addr cr cr
 
 <b  // init msg
     b{1000100} s,
@@ -45,6 +48,6 @@ state-init hashu workchain swap 2=: smc_addr
 b> 2 boc+>B
 
 "auto/init.boc" tuck B>file
-."Saved smc creating query to file: " type cr
+."saved smc creating query to file:       " type cr
 
 
