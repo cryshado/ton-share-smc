@@ -63,7 +63,7 @@ It's very simple! Send any amount of TON to a smart contract
 (another smart contract can also do this) and it will 
 automatically distribute it to the shareholders.
 
-![How to use](img/use.jpg)
+![How to use](img/use.png)
 
 ### Usefully information
 
