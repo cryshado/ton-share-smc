@@ -38,11 +38,12 @@ builder begin_message(flags, addr, grams) inline {
         return ();  ;; ignore all bounced messages
     }
 
-    if ((my_balance - msg_value) < (1 << 29)) {
-        msg_value -= (1 << 29);
+    int mina = 1 << 29;
+    if ((my_balance - msg_value) < mina) {
+        msg_value -= mina;
     }
 
-    throw_if(0, msg_value < 0);
+    throw_if(0, msg_value <= 0);
 
     cell holders = get_data().begin_parse().preload_dict();
 
