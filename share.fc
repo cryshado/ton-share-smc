@@ -19,7 +19,7 @@
 ;;  along with ton-share-smc.  If not, see <https://www.gnu.org/licenses/>.
 ;;
 
-slice txt::sned_share() asm "<b 124 word send share: | $, b> <s PUSHSLICE";
+slice txt::send_share() asm "<b 124 word send share: | $, b> <s PUSHSLICE";
 slice txt::percent() asm "<b 124 word %| $, b> <s PUSHSLICE";
 
 builder begin_message(flags, addr, grams) inline {
@@ -53,7 +53,7 @@ builder begin_message(flags, addr, grams) inline {
             send_raw_message(
                 begin_message(0x10, data~load_msg_addr(), msg_value / 100 * data~load_uint(7))
                 .store_uint(0, 32)  ;; op: 0
-                .store_slice(txt::sned_share())
+                .store_slice(txt::send_share())
                 .store_slice(data~load_bits(slice_bits(data)))  ;; text percent
                 .store_slice(txt::percent())
                 .end_cell(), 3      ;; mode: 3
