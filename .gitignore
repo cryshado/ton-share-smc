@@ -1,3 +1,6 @@
 testnet-global.config.json
 auto/*
 !auto/.gitkeep
+.idea
+
+holders.txt

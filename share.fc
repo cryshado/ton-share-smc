@@ -1,0 +1,63 @@
+;;
+;;  ton-share-smc – TON based smart contract for share allocation
+;;
+;;  Copyright (C) 2022 Alexander Gapak
+;;
+;;  This file is part of ton-share-smc.
+;;
+;;  ton-share-smc is free software: you can redistribute it and/or modify
+;;  it under the terms of the GNU General Public License as published by
+;;  the Free Software Foundation, either version 3 of the License, or
+;;  (at your option) any later version.
+;;
+;;  ton-share-smc is distributed in the hope that it will be useful,
+;;  but WITHOUT ANY WARRANTY; without even the implied warranty of
+;;  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;;  GNU General Public License for more details.
+;;
+;;  You should have received a copy of the GNU General Public License
+;;  along with ton-share-smc.  If not, see <https://www.gnu.org/licenses/>.
+;;
+
+slice txt::sned_share() asm "<b 124 word send share: | $, b> <s PUSHSLICE";
+slice txt::percent() asm "<b 124 word %| $, b> <s PUSHSLICE";
+
+builder begin_message(flags, addr, grams) inline {
+    return begin_cell()
+            .store_uint(flags, 6)
+            .store_slice(addr)
+            .store_grams(grams)
+            .store_uint(0, 1 + 4 + 4 + 64 + 32 + 1 + 1);
+}
+
+() recv_internal(int my_balance, int msg_value, cell msg, slice msg_body) impure {
+    slice cs = msg.begin_parse();
+    int flags = cs~load_uint(4);
+
+    if (flags & 1) {
+        return ();  ;; ignore all bounced messages
+    }
+
+    if ((my_balance - msg_value) < (1 << 29)) {
+        msg_value -= (1 << 29);
+    }
+
+    throw_if(0, msg_value < 0);
+
+    cell holders = get_data().begin_parse().preload_dict();
+
+    int i = -1;
+    do {
+        (i, slice data, int notfail) = holders.udict_get_next?(7, i);
+        if (notfail) {
+            send_raw_message(
+                begin_message(0x10, data~load_msg_addr(), msg_value / 100 * data~load_uint(7))
+                .store_uint(0, 32)  ;; op: 0
+                .store_slice(txt::sned_share())
+                .store_slice(data~load_bits(slice_bits(data)))  ;; text percent
+                .store_slice(txt::percent())
+                .end_cell(), 3      ;; mode: 3
+            );
+        }
+    } until (~ notfail);
+}

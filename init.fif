@@ -1,0 +1,88 @@
+/*
+  ton-share-smc – TON based smart contract for share allocation
+
+  Copyright (C) 2022 Alexander Gapak
+
+  This file is part of ton-share-smc.
+
+  ton-share-smc is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  ton-share-smc is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with ton-share-smc.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
+"TonUtil.fif" include
+"Asm.fif" include
+
+{ ."usage: " @' $0 type ." <holders-filename> <workchain-id>" cr
+  ."Creates a new share-smc in the specified workchain" cr 1 halt
+} : usage
+
+// ------------- init program args -------------
+$# 2 <> ' usage if
+
+$1 =: holders-filename
+$2 parse-workchain-id =: workchain-id
+
+variable holders dictnew holders !
+variable total-share total-share 0!
+
+{ { ."-" } 32 times cr } : pass-line
+
+// ------------ create holders dict  -----------
+{ <b swap dup type ."% share " 2 pick type cr
+    -rot swap  parse-smc-addr drop Addr,  // add addr to builder
+    swap tuck parse-int dup total-share +!
+    total-share @ 100 > abort"total share more than 100"
+    7 u, swap $, b> } : create-holder
+
+{ bl word 0 word create-holder } : +HOLDER
+
+holders-filename include
+
+total-share @ 100 = not abort"total share must be 100"
+
+variable i i 0!
+{ <s i @ holders @ 7 udict!+ drop holders ! i 1+! } depth 1 - times
+
+pass-line
+."The dictionary of " i @ .
+."elements was successfully created" cr
+pass-line
+
+// -------- prepare an external message --------
+<{ SETCP0 ACCEPT
+    "auto/share-code.fif" include PUSHREF SETCODE
+}>c =: code
+
+<b  // split_depth:0 special:0 code:1 data:1
+    b{0011} s,
+    code ref,
+    <b holders @ dict, b> ref,  // init_storage
+    null dict,                  // library
+b>  =: state-init
+
+state-init hashu workchain-id swap 2=: smc_addr
+
+."new simple-share smc address:           " smc_addr    .addr cr
+."non-bounceable address (for init):      " smc_addr  7 .Addr cr
+."bounceable address (for later access):  " smc_addr  6 .Addr cr pass-line
+
+<b  // Message X
+    b{1000100} s,
+    smc_addr addr,
+    b{000010} s,
+    state-init <s s,
+    b{0} s,
+b> 2 boc+>B
+
+"auto/init.boc" tuck B>file
+."saved smc creating query to file:       " type cr
