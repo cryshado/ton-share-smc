@@ -52,11 +52,15 @@ def main():
 
     resp = resp.json()
 
-    for elem in resp["result"]["stack"][0][1]["elements"]:
+    elements = resp["result"]["stack"][0][1]["elements"]
+    for elem in elements:
         wc, int_address, percent = (int(i["number"]["number"])
                                     for i in elem["tuple"]["elements"])
 
         print(address_to_b64(wc, int_address), f"{percent / 100}%")
+
+    print("- " * 27)
+    print(f"total holders count: {len(elements)}")
 
 
 if __name__ == "__main__":
