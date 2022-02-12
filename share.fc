@@ -19,6 +19,8 @@
 ;;  along with ton-share-smc.  If not, see <https://www.gnu.org/licenses/>.
 ;;
 
+;; include "lib/stdlib.fc"
+
 slice txt::send_share() asm "<b 124 word send share: | $, b> <s PUSHSLICE";
 slice txt::percent() asm "<b 124 word %| $, b> <s PUSHSLICE";
 
@@ -61,4 +63,19 @@ builder begin_message(flags, addr, grams) inline {
             );
         }
     } until (~ notfail);
+}
+
+tuple get_holders() method_id {
+    cell holders = get_data().begin_parse().preload_dict();
+    tuple result = empty_tuple();
+
+    int i = -1;
+    do {
+        (i, slice data, int notfail) = holders.udict_get_next?(7, i);
+        if (notfail) {
+            result~tpush([parse_std_addr(data~load_msg_addr()), data~load_uint(14)]);
+        }
+    } until (~ notfail);
+
+    return result;
 }

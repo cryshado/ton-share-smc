@@ -65,6 +65,10 @@ automatically distribute it to the shareholders.
 
 ![How to use](img/use.png)
 
+The smart contract also has a get method `get_holders` to get 
+a list of shareholders. You can call it with `get_holders.py` 
+for example. For more information, run `get_holders.py --help`.
+
 ### Usefully information
 
 You can find the source code for the FunC, Fift, 
@@ -72,4 +76,4 @@ and lite-client builds in this [repository](https://github.com/ton-blockchain/to
 
 #### LICENSE
 
-All source code, except the files in the `lib` directory, is distributed under the the `GPL-3.0 License`. The licenses of the libraries that are in the `lib` folder are listed at the head of the each library file.
+All source code, except some files in the `lib` directory, is distributed under the the `GPL-3.0 License`. The licenses of the libraries that are in the `lib` folder are listed at the head of the library files.
