@@ -65,9 +65,10 @@ automatically distribute it to the shareholders.
 
 ![How to use](img/use.png)
 
-The smart contract also has a get method `get_holders` to get 
-a list of shareholders. You can call it with `get_holders.py` 
-for example. For more information, run `get_holders.py --help`.
+The smart contract also has the `get_holders` get-method, which 
+can be used to get  a list of shareholders. You can call 
+it with `get_holders.py`for example. For more
+information, run `get_holders.py --help`.
 
 ### Usefully information
 
