@@ -73,7 +73,7 @@ information, run `get_holders.py --help`.
 ### Usefully information
 
 You can find the source code for the FunC, Fift, 
-and lite-client builds in this [repository](https://github.com/ton-blockchain/ton).
+and lite-client builds in this [repository](https://github.com/newton-blockchain/ton).
 
 #### LICENSE
 
