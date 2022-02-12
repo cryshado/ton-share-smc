@@ -1,23 +1,23 @@
-/*
-  ton-share-smc – TON based smart contract for share allocation
-
-  Copyright (C) 2022 Alexander Gapak
-
-  This file is part of ton-share-smc.
-
-  ton-share-smc is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  ton-share-smc is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with ton-share-smc.  If not, see <https://www.gnu.org/licenses/>.
-*/
+//
+//  ton-share-smc – TON based smart contract for share allocation
+//
+//  Copyright (C) 2022 Alexander Gapak
+//
+//  This file is part of ton-share-smc.
+//
+//  ton-share-smc is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  ton-share-smc is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with ton-share-smc.  If not, see <https://www.gnu.org/licenses/>.
+//
 
 "TonUtil.fif" include
 "Asm.fif" include
@@ -26,7 +26,7 @@
   ."Creates a new share-smc in the specified workchain" cr 1 halt
 } : usage
 
-// ------------- init program args -------------
+// --------------- init program ----------------
 $# 2 <> ' usage if
 
 $1 =: holders-filename
@@ -38,17 +38,23 @@ variable total-share total-share 0!
 { { ."-" } 32 times cr } : pass-line
 
 // ------------ create holders dict  -----------
-{ <b swap dup type ."% share " 2 pick type cr
-    -rot swap  parse-smc-addr drop Addr,  // add addr to builder
-    swap tuck parse-int dup total-share +!
-    total-share @ 100 > abort"total share more than 100"
-    7 u, swap $, b> } : create-holder
+100 constant per-fix
+
+{ (number) ?dup 0= abort"not a valid percent"
+    1- { per-fix swap */r  } { per-fix * } cond
+} : parse-percent
+
+{ <b 2 pick type swap dup ." " type ."%" cr
+    -rot swap parse-smc-addr drop Addr,  // add addr to builder
+    swap tuck parse-percent dup total-share +!
+    total-share @ per-fix 100 * > abort"total share more than 100%"
+    14 u, swap $, b> } : create-holder
 
 { bl word 0 word create-holder } : +HOLDER
 
 holders-filename include
 
-total-share @ 100 = not abort"total share must be 100"
+total-share @ per-fix 100 * = not abort"total share must be 100%"
 
 variable i i 0!
 { <s i @ holders @ 7 udict!+ drop holders ! i 1+! } depth 1 - times

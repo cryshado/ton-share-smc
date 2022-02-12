@@ -52,7 +52,7 @@ builder begin_message(flags, addr, grams) inline {
         (i, slice data, int notfail) = holders.udict_get_next?(7, i);
         if (notfail) {
             send_raw_message(
-                begin_message(0x10, data~load_msg_addr(), msg_value / 100 * data~load_uint(7))
+                begin_message(0x10, data~load_msg_addr(), msg_value / 10000 * data~load_uint(14))
                 .store_uint(0, 32)  ;; op: 0
                 .store_slice(txt::send_share())
                 .store_slice(data)  ;; text percent

@@ -25,9 +25,9 @@ The share is an integer number. The total share of all holders must be 100.
 Example file(`holders.txt`):
 
 ```txt
-+HOLDER EQBAtTjqPOsBvWPO_ij7xkLA11cjiXUKA3gRHVSbrYMEmWOF 10
-+HOLDER EQDI8skSrGW5EJX6UaU9WP8WY_VaM8cg7gDYFNWsn6olDFcc 75
-+HOLDER EQBosFYEWK-JOuNOdsN-iUoTaKwS4G0hoNTUrhfndZYvXGf3 15
++HOLDER EQBAtTjqPOsBvWPO_ij7xkLA11cjiXUKA3gRHVSbrYMEmWOF 75
++HOLDER EQDI8skSrGW5EJX6UaU9WP8WY_VaM8cg7gDYFNWsn6olDFcc 14.3
++HOLDER EQBosFYEWK-JOuNOdsN-iUoTaKwS4G0hoNTUrhfndZYvXGf3 10.7
 ```
 
 #### Create initialization external message
