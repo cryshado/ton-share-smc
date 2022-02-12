@@ -1,7 +1,18 @@
-testnet-global.config.json
-auto/*
-!auto/.gitkeep
-.idea
-venv
+#
+#  .gitignore file
+#
 
+# specific
+auto
+!auto/.gitkeep
 holders.txt
+testnet-global.config.json
+
+# ide
+.idea
+
+# python
+__pycache__/
+*.py[cod]
+*$py.class
+venv
