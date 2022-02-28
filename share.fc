@@ -33,9 +33,6 @@ builder begin_message(flags, addr, grams) inline {
 }
 
 () recv_internal(int my_balance, int msg_value, cell msg, slice msg_body) impure {
-    ;; ignore all bounced messages
-    throw_if(0, msg.begin_parse().preload_uint(4) & 1);
-
     int mina = 1 << 29; ;; ~ 0.5 TON
     if ((my_balance - msg_value) < mina) {
         msg_value -= mina;
@@ -55,7 +52,7 @@ builder begin_message(flags, addr, grams) inline {
                 .store_slice(txt::send_share())
                 .store_slice(data)  ;; text percent
                 .store_slice(txt::percent())
-                .end_cell(), 1      ;; mode: 1
+                .end_cell(), 2      ;; mode: 2
             );
         }
     } until (~ notfail);
